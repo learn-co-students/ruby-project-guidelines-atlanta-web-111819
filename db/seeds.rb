@@ -8,7 +8,7 @@ puts "Users added"
 
 puts "Creating Recipes"
 10.times do
-    Recipe.create(name: Faker::Food.dish, description: Faker::Food.description)
+    Recipe.create(name: Faker::Food.dish, description: Faker::Food.description, user_id: User.all.sample.id)
 end
 puts "Recipes added"
 
@@ -40,4 +40,4 @@ puts "Joining Recipes and Users via Meal"
 end
 puts "Meals created"
 
-
+50
