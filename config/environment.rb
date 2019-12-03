@@ -3,8 +3,9 @@ Bundler.require
 
 ActiveRecord::Base.establish_connection(
     adapter: 'sqlite3', 
-    database: 'db/development.db'
+    database: 'db/development.sqlite'
     )
-ActiveRecord::Base.Logger.new(STDOUT)
+
+ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 require_all 'lib'
