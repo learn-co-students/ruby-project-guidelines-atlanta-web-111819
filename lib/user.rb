@@ -62,6 +62,14 @@ class User < ActiveRecord::Base
         meal1.destroy
     end
 
+    def delete_my_recipe(recipe)
+        if recipe.creator_id == self.id 
+            recipe.destroy
+        else
+            puts "This is not your recipe!" ##################### FIX LATER
+        end
+    end
+
 
 
 
