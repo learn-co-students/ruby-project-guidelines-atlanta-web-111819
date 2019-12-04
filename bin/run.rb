@@ -1,5 +1,6 @@
 require_relative '../config/environment'
 
+puts "WELCOME TO THE MARVEL DATABASE"
+puts "\n\n\n"
 
-
-puts "HELLO WORLD"
+choice = take_entry
