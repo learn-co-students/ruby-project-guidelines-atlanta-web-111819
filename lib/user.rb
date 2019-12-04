@@ -53,6 +53,10 @@ class User < ActiveRecord::Base
         meal1.update(rating: rating)
     end
 
+    def edit_recipe(recipe, recipe_name, description)
+        recipe.update(name: recipe_name, description: description)
+    end
+
 
 
 
