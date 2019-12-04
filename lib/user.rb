@@ -79,9 +79,17 @@ class User < ActiveRecord::Base
         rated_meals.map{|rated_meal| [Recipe.find(rated_meal.recipe_id).name, rated_meal.rating]}
     end
 
-    def view_my_recipes_rating
-        self.created_recipes.map{|recipe|[recipe.name,recipe.view_recipe_rating]}
+    def view_my_recipes_ratings
+        self.created_recipes.map{|recipe|{name: recipe.name ,rating: recipe.view_recipe_rating}}
     end
+
+    def view_my_average_rating
+        
+        total = self.view_my_recipes_ratings.sum{|recipe| recipe[:rating]}
+        total/self.view_my_recipes_ratings.count
+    end
+
+
 
     
 
