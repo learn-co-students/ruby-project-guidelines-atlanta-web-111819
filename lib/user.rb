@@ -1,3 +1,4 @@
+require 'pry'
 class User < ActiveRecord::Base
     has_many :meals
     has_many :recipes, through: :meals
@@ -68,6 +69,14 @@ class User < ActiveRecord::Base
         else
             puts "This is not your recipe!" ##################### FIX LATER
         end
+    end
+
+
+    def my_rated_recipes
+        list = self.meals
+        # binding.pry
+        rated_meals = list.filter{|meal| meal.rating != nil}
+        rated_meals.map{|rated_meal| [Recipe.find(rated_meal.recipe_id).name, rated_meal.rating]}
     end
 
 
