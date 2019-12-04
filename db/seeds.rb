@@ -40,4 +40,14 @@ puts "Joining Recipes and Users via Meal"
 end
 puts "Meals created"
 
-50
+puts "Joining User categories"
+7.times do
+    UserCategory.create(category_id: Category.all.sample.id, user_id: User.all.sample.id)
+end
+puts "User Categories joined."
+
+puts "Joining Recipe Categories"
+10.times do
+    RecipeCategory.create(category_id: Category.all.sample.id, recipe_id: Recipe.all.sample.id)
+end
+puts "Recipe Categories joined."
