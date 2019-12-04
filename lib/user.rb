@@ -79,6 +79,10 @@ class User < ActiveRecord::Base
         rated_meals.map{|rated_meal| [Recipe.find(rated_meal.recipe_id).name, rated_meal.rating]}
     end
 
+    def view_my_recipes_rating
+        self.created_recipes.map{|recipe|[recipe.name,recipe.view_recipe_rating]}
+    end
+
     
 
 
