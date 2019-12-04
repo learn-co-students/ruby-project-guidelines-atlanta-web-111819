@@ -57,6 +57,15 @@ class User < ActiveRecord::Base
         recipe.update(name: recipe_name, description: description)
     end
 
+    def remove_saved_recipe(recipe)
+        meal1 = Meal.find_by(recipe_id: recipe.id)
+        meal1.destroy
+    end
+
+
+
+
+
 
 
 
