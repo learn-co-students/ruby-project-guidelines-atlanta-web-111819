@@ -1,11 +1,14 @@
 class Interface
 
     def welcome_message
+        clear_console
         puts "Welcome to FoodLocker"
         puts "Please Sign in or Signup"
-        puts "Sign in, type: signin"
-        puts "Sign up, type: signup"
-        log_in_input = get_valid_input(2)
+        # puts "Sign in, type: signin"
+        # puts "Sign up, type: signup"
+        options = ['Sign in', 'Sign up']
+        print_page_options(options)
+        log_in_input = get_valid_input(options.length)
         if log_in_input == 1
             self.signin
         else
@@ -15,7 +18,7 @@ class Interface
 
     def get_valid_input(option_num)
         puts "Please enter a number between 1 and #{option_num}"
-        user_input = self.input.to_i
+        user_input = self.get_input.to_i
         if user_input >= 1 && user_input <= option_num
             user_input
         else
@@ -28,6 +31,7 @@ class Interface
     end
 
     def signin
+        clear_console
         puts "Please enter your name"
         puts "Press Enter to go back"
         user_name = get_input
@@ -46,6 +50,7 @@ class Interface
     end
 
     def signup
+        clear_console
         puts "Please enter your name"
         puts "Press Enter to go back"
         user_name = get_input
@@ -53,7 +58,7 @@ class Interface
             welcome_message
         end
 
-        user = User.find_by(name: user_input)
+        user = User.find_by(name: user_name)
         if user
             signin
         else
@@ -69,30 +74,35 @@ class Interface
     end
 
     def user_page(user)
+        clear_console
         puts "Hello #{user.name}, welcome back."
-        options = ['Create a recipe', 'View my saved recipes', 'find a recipe', 'view my created recipes', 'logout', 'quit']
+        options = ['Create a recipe', 'View my saved recipes', 'find a recipe', 'view my created recipes', 'more', 'logout', 'quit']
         print_page_options(options)
 
         user_input = get_valid_input(options.length)
 
         case user_input
         when 1
-            create_recipe
+            create_recipe            #DONE, mostly
         when 2
             view_saved_recipes(user) #DONE
         when 3
             find_a_recipe            #DONE
         when 4
-            view_created_recipes
+            view_created_recipes     #DONE
         when 5
-            welcome_message
+            more_options
         when 6
+            welcome_message          #DONE
+        when 7
+            clear_console
             abort("Thanks for using FoodLocker")
         end
     end
 
     def view_saved_recipes(user)
-        recipes = user.view_saved_recipes
+        clear_console
+        recipes = user.see_saved_recipes
         recipes.each do |recipe|
             puts "*************"
             puts "name: #{recipe.name}"
@@ -100,28 +110,31 @@ class Interface
             puts "rating: #{recipe.view_recipe_rating}"
         end
         puts "*************"
-        press_enter_to_back
+        press_enter_to_go_back
     end
 
-    def press_enter_to_back
+    def press_enter_to_go_back
         puts "----------------------"
         puts "Press Enter to go back"
         user_input = get_input
         if user_input.empty?
-            user_page(user)
+            user_page(@logged_in_user)
         end
         user_input
     end
 
-    def find_a_recipe
+    def find_a_recipe(error = false)
+        clear_console
+        puts "Sorry, that recipe does not exist" if error
+        error = false
         puts "Please enter the name of a recipe"
-        user_input = press_enter_to_back
+        user_input = press_enter_to_go_back
         recipe = Recipe.find_by(name: user_input)
         if recipe
             view_recipe(recipe)
         else
-            puts "Sorry, that recipe does not exist"
-            find_a_recipe
+            
+            find_a_recipe(true)
         end
         
     end
@@ -140,9 +153,166 @@ class Interface
         ingredients = recipe.ingredients
         recipe_ingredients = recipe.recipe_ingredients
         ingredients.each_with_index do |ingredient, index|
-            puts "#{ingedient.name}: #{recipe_ingredients[index].amount}"
+            puts "#{ingredient.name}: #{recipe_ingredients[index].amount}"
+        end
+
+        remove_recipe = false
+        options = ['Save recipe?', 'Go back']
+        if !@logged_in_user.recipes.include?(recipe)
+            options[0] = 'Save recipe?'
+        else
+            options[0] = 'Remove recipe from saved list?'
+            remove_recipe = true
+        end
+        
+        print_page_options(options)
+        user_input = get_valid_input(options.length)
+        case user_input
+        when 1
+            if !remove_recipe
+                puts "Before saving, rate this recipe. Leave empty to skip"
+                rating = get_input
+                rating = 3 if rating.empty?
+                @logged_in_user.save_recipe(recipe, rating.to_i)
+                clear_console
+                puts "Recipe saved successfully"
+                press_enter_to_go_back
+            else
+                @logged_in_user.remove_saved_recipe(recipe)
+                clear_console
+                puts "Successfully removed recipe from saved recipes"
+                press_enter_to_go_back
+            end
+        when 2
+            user_page(@logged_in_user)
+        end
+        
+    end
+
+    def create_recipe
+        clear_console
+        puts "Welcome, recipe creator!"
+        puts "Please enter the name of your recipe"
+        recipe_name = get_input
+        clear_console
+        puts "Please enter a description for your recipe"
+        recipe_description = get_input
+        clear_console
+        puts "Please enter your Ingredients"
+        puts "Use the correct format for ingredients"
+        puts "<INGREDIENT NAME>: <AMOUNT>"
+        puts ""
+        puts "When done inputing ingredients, press enter to stop."
+        ingredients = []
+        # continue = true
+        while true
+            ingredient_string = get_input
+            if ingredient_string.empty?
+                break
+            end
+            ingredients_split = ingredient_string.split(': ')
+            ingredients << {name: ingredients_split[0], amount: ingredients_split[1]}
+        end
+        @logged_in_user.create_recipe(recipe_name, recipe_description, ingredients)
+        clear_console
+        puts "Recipe created successfully"
+        press_enter_to_go_back
+    end
+
+    def view_created_recipes
+        clear_console
+        puts "Average rating: #{@logged_in_user.view_my_average_rating}"
+        puts "********************"
+        @logged_in_user.created_recipes.each_with_index do |recipe, index|
+            puts "#{index+1}."
+            puts "NAME: #{recipe.name}"
+            puts "RATING: #{recipe.view_recipe_rating}"
+            puts "DESCRIPTION:"
+            puts "#{recipe.description}"
+            puts "*********************"
+        end
+        options = ['Edit a recipe', 'Go back']
+        print_page_options(options)
+        input = get_valid_input(options.length)
+        case input
+        when 1
+            edit_a_recipe
+        when 2
+            user_page(@logged_in_user)
         end
     end
 
+    def edit_a_recipe
+        clear_console
+        puts "Please choose a recipe to edit:"
+        recipes = @logged_in_user.created_recipes
+        print_page_options(recipes.map {|recipe| recipe.name})
+        input = get_valid_input(recipes.length)
+        recipe = recipes[input-1]
+        clear_console
+        puts "Please enter a new name, or leave empty to skip"
+        new_name = get_input
+        recipe.name = new_name if !new_name.empty?
+        puts "************"
+        puts "Please enter a new description, or leave empty to skip"
+        new_description = get_input
+        recipe.description = new_description if !new_description.empty?
+        @logged_in_user.edit_recipe(recipe, recipe.name, recipe.description)
+        clear_console
+        puts "Recipe edited successfully"
+        press_enter_to_go_back
+    end
+
+    def more_options
+        clear_console
+        options = ['View recipes in a category', "View recipes I've rated", 'View top category', 'View top rated recipe', 'Go back']
+        print_page_options(options)
+        input = get_valid_input(options.length)
+        case input
+        when 1
+            view_recipes_in_category       #DONE
+        when 2
+            view_recipes_i_rated           #DONE
+        when 3
+            view_top_category
+        when 4
+            view_top_rated_recipe
+        when 5
+            user_page(@logged_in_user)
+        end
+    end
+
+    def view_recipes_in_category
+        clear_console
+        recipes = @logged_in_user.recipes_in_my_categories
+        recipes.each do |recipe|
+            puts "NAME: #{recipe.name}"
+            puts "RATING: #{recipe.view_recipe_rating}"
+            puts "DESCRIPTION:"
+            puts "#{recipe.description}"
+            puts "************"
+        end
+        press_enter_to_go_back
+    end
+
+    def view_recipes_i_rated
+        clear_console
+        recipes = @logged_in_user.my_rated_recipes
+        recipes.each do |recipe_array|
+            puts "NAME: #{recipe_array[0]}, RATING: #{recipe_array[1]}"
+            puts "------------"
+        end
+        press_enter_to_go_back
+    end
+
+    def view_top_category
+        clear_console
+        puts "How many popular categories do you want to see?"
+        input = get_input.to_i
+        UserCategory.top_n_categories(input).each do |category|
+            puts "Category Title: #{category.keys[0]}"
+        end
+        press_enter_to_go_back
+    end
 
 end

@@ -27,6 +27,12 @@ class User < ActiveRecord::Base
     end
 
     def create_recipe(name, description, ingredients)
+        #ingredients is an array of hashes
+        # E.G.
+        #[
+        # {name: "Water", amount: "1 gallon"},
+        # {name: "FLour", amount: "6 pounds"}
+        # ]
         new_recipe = Recipe.create(name: name, description: description, creator_id: self.id)
         create_recipe_ingredients(self.create_ingredients(ingredients), new_recipe)
     end
