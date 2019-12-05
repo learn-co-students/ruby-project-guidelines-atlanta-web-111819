@@ -2,12 +2,12 @@ def take_entry
     puts "How do you want to access the database?\n"
     puts "1. See available characters"
     puts "2. See available comics"
-    puts "3. other methods\n"
+    puts "3. Access recorded database"
     puts "Enter a number or exit"
 
     gets.chomp
 end
-
+###################################################### API COMMANDS ################################################################
 def get_characters
     looper = "y"
     offset_num = 0
@@ -81,9 +81,6 @@ def print_character(printer)
     end
 end
 
-def get_entry
-    gets.chomp
-end
 
 def add_to_db(whch, offset_num)
     temp = fetch_marvel(whch, offset_num)
@@ -100,14 +97,20 @@ def add_to_db(whch, offset_num)
         end
     else
         if whch == "characters"
-            tmpchar = temp["data"]["results"].select{|item| item["name"] == choice2}
+            tmpchar = temp["data"]["results"].select{|item| item["name"] == choice2 or item["id"].to_i == choice2.to_i}
             binding.pry
             Character.find_or_create_by(char_id: tmpchar[0]["id"], name: tmpchar[0]["name"], desc: tmpchar[0]["description"])
         elsif whch == "comics"
-            tmpchar = temp["data"]["results"].select{|item| item["title"] == choice2}
+            tmpchar = temp["data"]["results"].select{|item| item["title"] == choice2 or item["id"].to_i == choice2.to_i}
             Comic.find_or_create_by(comic_id: tmpchar[0]["id"], name: char["title"], release_date: tmpchar[0]["dates"][0]["date"], issue_num: tmpchar[0]["issueNumber"], description: tmpchar[0]["description"])
         end
     end
                 
+end
+
+################################################# GENERAL METHODS #########################################################################
+
+def get_entry
+    gets.chomp
 end
 
