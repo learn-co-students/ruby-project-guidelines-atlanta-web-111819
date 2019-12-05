@@ -137,7 +137,7 @@ def add_character(char_info)
 end
 
 def add_comic(tmpchar)
-    binding.pry
+    # binding.pry
     Comic.find_or_create_by(comic_id: tmpchar["id"], name: tmpchar["title"], release_date: tmpchar["dates"][0]["date"], issue_num: tmpchar["issueNumber"], description: tmpchar["description"])
     temp = fetch_characters(tmpchar["id"])
     tmp_comic = temp["data"]["results"].select{|item| Character.where(char_id: item["id"]).exists?}

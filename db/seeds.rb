@@ -27,6 +27,6 @@
 #     Comic.create(comic_id: entry["id"], name: entry["title"], release_date: entry["dates"][0]["date"], issue_num: entry["issueNumber"], description: entry["description"])
 # end
 
-# Character.delete_all
-# Comic.delete_all
-# Charactercomic.delete_all
+Character.delete_all
+Comic.delete_all
+Charactercomic.delete_all
