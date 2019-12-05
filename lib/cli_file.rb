@@ -10,8 +10,8 @@ end
 
 def get_characters
     looper = "y"
-    offset_num = 100
-    temp = fetch_marvel("characters")
+    offset_num = 0
+    temp = fetch_marvel("characters", offset_num)
 
     puts "The available characters are: "
     print_character(temp)
@@ -22,13 +22,14 @@ def get_characters
         choice = get_entry
 
         if choice == "next"
-            print_character(fetch_marvel("characters", offset_num))
             offset_num += 100
+            print_character(fetch_marvel("characters", offset_num))
+            # offset_num += 100
         elsif choice == "last" && offset_num >= 100
-            offset_num -= 200
+            offset_num -= 100
             print_character(fetch_marvel("characters", offset_num))
         elsif choice == "add"
-            add_to_db("characters", offset_num - 100)
+            add_to_db("characters", offset_num)
         elsif choice == "back to menu"
             looper = "n"
         else
@@ -40,24 +41,25 @@ end
 
 def get_comics
     looper = "y"
-    offset_num = 100
-    temp = fetch_marvel("comics")
+    offset_num = 0
+    temp = fetch_marvel("comics", offset_num)
     puts "The available comics are: "
     print_comic(temp)
 
     while looper == "y"
         puts "\n\n"
-        puts "next, last, back to menu?"
+        puts "next, last, add, back to menu?"
         choice = get_entry
 
         if choice == "next"
-            print_comic(fetch_marvel("comics", offset_num))
             offset_num += 100
+            print_comic(fetch_marvel("comics", offset_num))
+            # offset_num += 100
         elsif choice == "last" && offset_num >= 100
-            offset_num -= 200
+            offset_num -= 100
             print_comic(fetch_marvel("comics", offset_num))
         elsif choice == "add"
-            add_to_db("comics", offset_num - 100)
+            add_to_db("comics", offset_num)
         elsif choice == "back to menu"
             looper = "n"
         else
