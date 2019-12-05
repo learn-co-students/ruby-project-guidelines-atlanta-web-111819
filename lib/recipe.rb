@@ -14,4 +14,14 @@ class Recipe < ActiveRecord::Base
         total.to_f/self.meals.count
     end
 
+    def self.see_top_rated_recipes
+        best_recipes = Recipe.all.sort {|recipe1, recipe2| recipe2.view_recipe_rating <=> recipe1.view_recipe_rating }
+        recipes_and_ratings = best_recipes.map{|recipe| [recipe.name, recipe.view_recipe_rating]}
+        recipes_and_ratings[0..10]
+    end
+    
+    def self.search(name)
+        Recipe.all.where('name = ?', name.capitalize).all
+    end
+
 end
