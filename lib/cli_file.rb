@@ -1,12 +1,4 @@
-def take_entry
-    puts "How do you want to access the database?\n"
-    puts "1. See available characters"
-    puts "2. See available comics"
-    puts "3. Access recorded database"
-    puts "Enter a number or exit"
 
-    gets.chomp
-end
 ###################################################### API COMMANDS ################################################################
 def get_characters
     looper = "y"
@@ -110,17 +102,21 @@ def add_to_db(whch, offset_num)
     if choice2 == "add all"
         temp["data"]["results"].each do |char|
             if whch == "characters"
-                add_character(char)
+                ch_val = char
+                add_character(ch_val)
             elsif whch == "comics"
-                add_comic(char)
+                com_val = char
+                add_comic(com_val)
             end
         end
     else
         if whch == "characters"
             tmpchar = temp["data"]["results"].select{|item| item["name"] == choice2 or item["id"].to_i == choice2.to_i}
+            tmpchar = tmpchar[0]
             add_character(tmpchar)
         elsif whch == "comics"
             tmpchar = temp["data"]["results"].select{|item| item["title"] == choice2 or item["id"].to_i == choice2.to_i}
+            tmpchar = tmpchar[0]
             add_comic(tmpchar)
         end
     end
@@ -128,10 +124,10 @@ def add_to_db(whch, offset_num)
 end
 
 def add_character(char_info)
-    Character.find_or_create_by(char_id: char_info[0]["id"], name: char_info[0]["name"], desc: char_info[0]["description"])
-    temp = fetch_comics(char_info[0]["id"])
+    Character.find_or_create_by(char_id: char_info["id"], name: char_info["name"], desc: char_info["description"])
+    temp = fetch_comics(char_info["id"])
     tmp_comic = temp["data"]["results"].select{|item| Comic.where(comic_id: item["id"]).exists?}
-    tmp_comic.each{|entry| Charactercomic.find_or_create_by(character_id: char_info[0]["id"], comic_id: entry["id"])}
+    tmp_comic.each{|entry| Charactercomic.find_or_create_by(character_id: char_info["id"], comic_id: entry["id"])}
     # binding.pry
 
 end
@@ -161,6 +157,7 @@ def open_database
     when "2"
         comic_database
     when "3"
+        relation_database
     else
         puts "Not a valid entry"
     end
@@ -168,18 +165,24 @@ def open_database
 end
 
 def char_database
-    Screen.clear
-    puts "\n Character database"
-    puts "1. Display database"
-    puts "2. Clear database"
+    looper = "y"
+    while looper == "y"
+        Screen.clear
+        puts "\n Character database"
+        puts "1. Display database"
+        puts "2. Clear database"
+        puts "3. Exit"
 
-    choice = get_entry
+        choice = get_entry
 
-    case choice
-    when "1"
-        display_char
-    when "2"
-        Character.delete_all
+        case choice
+        when "1"
+            display_char
+        when "2"
+            Character.delete_all
+        when "3"
+            looper = "n"
+        end
     end
 end
 
@@ -200,11 +203,20 @@ def display_char
         puts "Name: #{temp.name}"
         puts "Marvel ID: #{temp.char_id}"
         puts "Description: #{temp.desc}"
-        puts "\n Del? y or n"
+        puts "\n Get related 'comics' or 'del'"
         choice2 = get_entry
 
-        if choice2 == "y"
-            Character.delete(choice.to_i)
+        case choice2
+        when "comics"
+            related_comics(temp)
+        when "del"
+            "Are you sure you want to delete?"
+            choice3 = get_entry
+
+            if choice3 == "y"
+                Comic.delete(choice.to_i)
+                display_comic
+            end
         end
 
     when "exit"
@@ -215,18 +227,24 @@ def display_char
 end
 
 def comic_database
-    Screen.clear
-    puts "\n Comic database"
-    puts "1. Display database"
-    puts "2. Clear database"
+    looper = "y"
+    while looper == "y"
+        Screen.clear
+        puts "\n Comic database"
+        puts "1. Display database"
+        puts "2. Clear database"
+        puts "3. Exit"
 
-    choice = get_entry
+        choice = get_entry
 
-    case choice
-    when "1"
-        display_comic
-    when "2"
-        Comic.delete_all
+        case choice
+        when "1"
+            display_comic
+        when "2"
+            Comic.delete_all
+        when "3"
+            looper = "n"
+        end
     end
 end
 
@@ -249,12 +267,81 @@ def display_comic
         puts "Issue #: #{temp.issue_num}"
         puts "Release Date: #{temp.release_date}"
         puts "Description: #{temp.description}"
-        puts "\n Del? y or n"
+        puts "\n Get related 'characters' or 'del'"
         choice2 = get_entry
 
-        if choice2 == "y"
-            Comic.delete(choice.to_i)
-            display_comic
+        case choice2
+        when "characters"
+            related_characters(temp)
+        when "del"
+            "Are you sure you want to delete?"
+            choice3 = get_entry
+
+            if choice3 == "y"
+                Comic.delete(choice.to_i)
+                display_comic
+            end
+        end
+
+    when "exit"
+        Screen.clear
+        display_comic
+    end
+
+end
+
+def relation_database
+    looper = "y"
+    while looper == "y"
+        Screen.clear
+        puts "\n Relation database"
+        puts "1. Display database"
+        puts "2. Clear database"
+        puts "3. Exit"
+
+        choice = get_entry
+
+        case choice
+        when "1"
+            display_relation
+        when "2"
+            Charactercomic.delete_all
+        when "3"
+            looper = "n"
+        end
+    end
+end
+
+def display_relation
+    Charactercomic.all.each do |char|
+        # binding.pry
+        puts "#{char.character_id} | #{char.comic_id}"
+    end
+    puts "'select' Character or 'exit'"
+    choice = get_entry
+
+    case choice
+    when "select"
+        puts "Enter id of entry you wish to select"
+        choice = get_entry
+        temp = Charactercomic.find(choice.to_i)
+        puts "*" * 30
+        puts "Character ID: #{temp.character_id}"
+        puts "Comic ID: #{temp.comic_id}"
+        puts "\n Get related 'items' or 'del'"
+        choice2 = get_entry
+
+        case choice2
+        when "characters"
+            print_relation(temp)
+        when "del"
+            "Are you sure you want to delete?"
+            choice3 = get_entry
+
+            if choice3 == "y"
+                Charactercomic.delete(choice.to_i)
+                display_relation
+            end
         end
 
     when "exit"
@@ -267,6 +354,16 @@ end
 ################################################# GENERAL METHODS #########################################################################
 
 def get_entry
+    gets.chomp
+end
+
+def take_entry
+    puts "How do you want to access the database?\n"
+    puts "1. See available characters"
+    puts "2. See available comics"
+    puts "3. Access recorded database"
+    puts "Enter a number or exit"
+
     gets.chomp
 end
 

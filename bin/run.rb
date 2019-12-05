@@ -19,14 +19,6 @@ while lpr == "y"
     when "exit"
         lpr = "n"
     end
-
-    # if choice == "1"
-    # get_characters
-    # elsif choice == "2"
-    # get_comics
-    # elsif choice == "exit"
-    #     lpr = "n"
-    # end
 end
 
 
