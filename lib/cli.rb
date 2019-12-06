@@ -224,7 +224,18 @@ class Interface
             ingredients_split = ingredient_string.split(': ')
             ingredients << {name: ingredients_split[0], amount: ingredients_split[1]}
         end
-        @logged_in_user.create_recipe(recipe_name, recipe_description, ingredients)
+        recipe = @logged_in_user.create_recipe(recipe_name, recipe_description, ingredients)
+        clear_console
+        categories = []
+        puts "Enter recipe categories. Leave empty to exit"
+        while true
+            category_name = get_input
+            if category_name.empty?
+                break
+            end
+            category = Category.find_or_create_by(title: category_name)
+            RecipeCategory.create(category_id: category.id, recipe_id: recipe.id)
+        end
         clear_console
         puts "Recipe created successfully"
         press_enter_to_go_back
@@ -297,10 +308,10 @@ class Interface
         clear_console
         recipes = @logged_in_user.recipes_in_my_categories
         recipes.each do |recipe|
-            puts "NAME: #{recipe.name}"
-            puts "RATING: #{recipe.view_recipe_rating}"
-            puts "DESCRIPTION:"
-            puts "#{recipe.description}"
+            puts "NAME: #{recipe}"
+            # puts "RATING: #{recipe.view_recipe_rating}"
+            # puts "DESCRIPTION:"
+            # puts "#{recipe.description}"
             puts "************"
         end
         press_enter_to_go_back
@@ -362,6 +373,26 @@ class Interface
         clear_console
         puts "Name updated successfully"
         puts "Your new username is: #{@logged_in_user.name}"
+        press_enter_to_go_back
+    end
+
+    def add_fav_category
+        clear_console
+        my_categories = @logged_in_user.categories
+        available_categories = Category.all.reject {|category| my_categories.include?(category)}
+        puts "Your favorite categories are:"
+        my_categories.each_with_index {|category, index| puts "#{index+1}. #{category.title}"}
+        puts "-----------------"
+        puts "These are the categories that are available:"
+        print_page_options(available_categories.map{|category| category.title})
+        puts "-----------------"
+        puts "Please enter the number beside the category you want to add."
+        input = get_valid_input(available_categories.length)-1
+        UserCategory.create(user_id: @logged_in_user.id, category_id: available_categories[input].id)
+        clear_console
+        puts "You added the category: #{available_categories[input].title}."
+        puts "-----------------"
+        @logged_in_user.categories.each_with_index {|category, index| puts "#{index+1}. #{category.title}"}
         press_enter_to_go_back
     end
 

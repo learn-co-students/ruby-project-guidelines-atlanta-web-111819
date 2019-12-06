@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
         # ]
         new_recipe = Recipe.create(name: name, description: description, creator_id: self.id)
         create_recipe_ingredients(self.create_ingredients(ingredients), new_recipe)
+        new_recipe
     end
 
     def create_ingredients(ingredients)
