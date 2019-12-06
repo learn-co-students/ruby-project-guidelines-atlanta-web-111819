@@ -8,6 +8,7 @@ class Interface
         # puts "Sign up, type: signup"
         options = ['Sign in', 'Sign up']
         print_page_options(options)
+        
         log_in_input = get_valid_input(options.length)
         if log_in_input == 1
             self.signin
@@ -18,6 +19,7 @@ class Interface
 
     def get_valid_input(option_num)
         puts "Please enter a number between 1 and #{option_num}"
+
         user_input = self.get_input.to_i
         if user_input >= 1 && user_input <= option_num
             user_input
@@ -35,6 +37,7 @@ class Interface
         puts "Please enter your name" if !new_user
         puts "Please type your name again to login." if new_user
         puts "Press Enter to go back"
+
         user_name = get_input
         if user_name.empty?
             welcome_message
@@ -54,6 +57,7 @@ class Interface
         clear_console
         puts "Please enter your name"
         puts "Press Enter to go back"
+
         user_name = get_input
         if user_name.empty?
             welcome_message
@@ -77,6 +81,7 @@ class Interface
     def user_page
         clear_console
         puts "Hello #{@logged_in_user.name}, welcome back."
+
         options = [
             'Create a recipe', 
             'View my saved recipes', 
@@ -121,6 +126,7 @@ class Interface
             puts "description: #{recipe.description}"
             puts "rating: #{recipe.view_recipe_rating}"
         end
+
         puts "*************"
         press_enter_to_go_back
     end
@@ -128,6 +134,7 @@ class Interface
     def press_enter_to_go_back
         puts "----------------------"
         puts "Press Enter to go back"
+
         user_input = get_input
         if user_input.empty?
             user_page
@@ -140,6 +147,7 @@ class Interface
         puts "Sorry, that recipe does not exist" if error
         error = false
         puts "Please enter the name of a recipe"
+
         user_input = press_enter_to_go_back
         recipe = Recipe.find_by(name: user_input)
         # binding.pry
@@ -163,6 +171,7 @@ class Interface
         puts "DESCRIPTION:"
         puts "#{recipe.description}"
         puts "---------------------"
+
         recipe_ingredients = recipe.recipe_ingredients
         recipe.ingredients.each_with_index do |ingredient, index|
             puts "#{ingredient.name}: #{recipe_ingredients[index].amount}"
@@ -183,14 +192,17 @@ class Interface
         when 1
             if !remove_recipe
                 puts "Before saving, rate this recipe. Leave empty to skip"
+
                 rating = get_input
                 rating = 3 if rating.empty?
                 @logged_in_user.save_recipe(recipe, rating.to_i)
+
                 clear_console
                 puts "Recipe saved successfully"
                 press_enter_to_go_back
             else
                 @logged_in_user.remove_saved_recipe(recipe)
+
                 clear_console
                 puts "Successfully removed recipe from saved recipes"
                 press_enter_to_go_back
@@ -206,9 +218,11 @@ class Interface
         puts "Welcome, recipe creator!"
         puts "Please enter the name of your recipe"
         recipe_name = get_input
+
         clear_console
         puts "Please enter a description for your recipe"
         recipe_description = get_input
+
         clear_console
         puts "Please enter your Ingredients"
         puts "Use the correct format for ingredients"
@@ -228,6 +242,7 @@ class Interface
         recipe = @logged_in_user.create_recipe(recipe_name, recipe_description, ingredients)
         clear_console
         categories = []
+
         puts "Enter recipe categories. Leave empty to exit"
         while true
             category_name = get_input
@@ -237,6 +252,7 @@ class Interface
             category = Category.find_or_create_by(title: category_name)
             RecipeCategory.create(category_id: category.id, recipe_id: recipe.id)
         end
+
         clear_console
         puts "Recipe created successfully"
         press_enter_to_go_back
@@ -246,6 +262,7 @@ class Interface
         clear_console
         puts "Average rating: #{@logged_in_user.view_my_average_rating}"
         puts "********************"
+
         @logged_in_user.created_recipes.each_with_index do |recipe, index|
             puts "#{index+1}."
             puts "NAME: #{recipe.name}"
@@ -268,19 +285,25 @@ class Interface
     def edit_a_recipe
         clear_console
         puts "Please choose a recipe to edit:"
+
         recipes = @logged_in_user.created_recipes
+
         print_page_options(recipes.map {|recipe| recipe.name})
         input = get_valid_input(recipes.length)
         recipe = recipes[input-1]
+
         clear_console
         puts "Please enter a new name, or leave empty to skip"
         new_name = get_input
         recipe.name = new_name if !new_name.empty?
+
         puts "************"
         puts "Please enter a new description, or leave empty to skip"
+
         new_description = get_input
         recipe.description = new_description if !new_description.empty?
         @logged_in_user.edit_recipe(recipe, recipe.name, recipe.description)
+
         clear_console
         puts "Recipe edited successfully"
         press_enter_to_go_back
@@ -385,8 +408,10 @@ class Interface
         clear_console
         puts "Please enter a new username"
         puts "---------------------------"
+
         input = get_input
         @logged_in_user.update(name: input)
+        
         clear_console
         puts "Name updated successfully"
         puts "Your new username is: #{@logged_in_user.name}"
@@ -397,18 +422,25 @@ class Interface
         clear_console
         my_categories = @logged_in_user.categories
         available_categories = Category.all.reject {|category| my_categories.include?(category)}
+
         puts "Your favorite categories are:"
+
         my_categories.each_with_index {|category, index| puts "#{index+1}. #{category.title}"}
+
         puts "-----------------"
         puts "These are the categories that are available:"
         print_page_options(available_categories.map{|category| category.title})
         puts "-----------------"
+
         puts "Please enter the number beside the category you want to add."
+
         input = get_valid_input(available_categories.length)-1
         UserCategory.create(user_id: @logged_in_user.id, category_id: available_categories[input].id)
+
         clear_console
         puts "You added the category: #{available_categories[input].title}."
         puts "-----------------"
+
         @logged_in_user.categories.each_with_index {|category, index| puts "#{index+1}. #{category.title}"}
         press_enter_to_go_back
     end
