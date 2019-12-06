@@ -76,14 +76,23 @@ class Interface
     def user_page(user)
         clear_console
         puts "Hello #{user.name}, welcome back."
-        options = ['Create a recipe', 'View my saved recipes', 'find a recipe', 'view my created recipes', 'more', 'logout', 'quit']
+        options = [
+            'Create a recipe', 
+            'View my saved recipes', 
+            'find a recipe', 
+            'view my created recipes', 
+            'Manage account', 
+            'more', 
+            'logout', 
+            'quit'
+        ]
         print_page_options(options)
 
         user_input = get_valid_input(options.length)
 
         case user_input
         when 1
-            create_recipe            #DONE, mostly
+            create_recipe            #DONE
         when 2
             view_saved_recipes(user) #DONE
         when 3
@@ -91,10 +100,12 @@ class Interface
         when 4
             view_created_recipes     #DONE
         when 5
-            more_options
+            manage_account
         when 6
-            welcome_message          #DONE
+            more_options             #DONE
         when 7
+            welcome_message          #DONE
+        when 8
             clear_console
             abort("Thanks for using FoodLocker")
         end
@@ -274,9 +285,9 @@ class Interface
         when 2
             view_recipes_i_rated           #DONE
         when 3
-            view_top_category
+            view_top_category              #DONE
         when 4
-            view_top_rated_recipe
+            view_top_rated_recipe          #DONE
         when 5
             user_page(@logged_in_user)
         end
@@ -299,7 +310,7 @@ class Interface
         clear_console
         recipes = @logged_in_user.my_rated_recipes
         recipes.each do |recipe_array|
-            puts "NAME: #{recipe_array[0]}, RATING: #{recipe_array[1]}"
+            puts "NAME: #{recipe_array[0]}, MY RATING: #{recipe_array[1]}"
             puts "------------"
         end
         press_enter_to_go_back
@@ -312,6 +323,45 @@ class Interface
         UserCategory.top_n_categories(input).each do |category|
             puts "Category Title: #{category.keys[0]}"
         end
+        press_enter_to_go_back
+    end
+
+    def view_top_rated_recipe
+        clear_console
+        Recipe.see_top_rated_recipes.each_with_index do |recipe, index|
+            puts "#{index+1}. NAME: #{recipe[0]} -- RATING: #{recipe[1]}"
+        end
+        press_enter_to_go_back
+    end
+
+    def manage_account
+        clear_console
+        options = [
+            'Change User Name',
+            'Add favorite category',
+            'Go back'
+        ]
+        print_page_options(options)
+        input = get_valid_input(options.length)
+        case input
+        when 1
+            change_name
+        when 2
+            add_fav_category
+        when 3
+            user_page(@logged_in_user)
+        end
+    end
+
+    def change_name
+        clear_console
+        puts "Please enter a new username"
+        puts "---------------------------"
+        input = get_input
+        @logged_in_user.update(name: input)
+        clear_console
+        puts "Name updated successfully"
+        puts "Your new username is: #{@logged_in_user.name}"
         press_enter_to_go_back
     end
 
