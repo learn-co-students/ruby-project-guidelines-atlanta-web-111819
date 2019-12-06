@@ -10,4 +10,3 @@ gem "require_all"
 gem "faker", "~> 2.2"
 
 gem "gem", "~> 0.0.1.alpha"
-gem "colorize", "~> 0.8.1"

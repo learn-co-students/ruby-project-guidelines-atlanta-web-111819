@@ -144,7 +144,7 @@ class Interface
 
     def find_a_recipe(error = false)
         clear_console
-        puts "Sorry, that recipe does not exist" if error
+        puts "Sorry, that recipe does not exist".colorize(:red) if error
         error = false
         puts "Please enter the name of a recipe"
 
