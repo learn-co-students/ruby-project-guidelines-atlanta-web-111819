@@ -122,9 +122,9 @@ class Interface
         clear_console
         @logged_in_user.see_saved_recipes.each do |recipe|
             puts "*************"
-            puts "name: #{recipe.name}"
-            puts "description: #{recipe.description}"
-            puts "rating: #{recipe.view_recipe_rating}"
+            puts "name: #{recipe.name.colorize(:green)}"
+            puts "description: #{recipe.description.colorize(:blue)}"
+            puts "rating: " + "#{recipe.view_recipe_rating}".colorize(:green)
         end
 
         puts "*************"
