@@ -73,9 +73,9 @@ class Interface
         end
     end
 
-    def user_page(user)
+    def user_page
         clear_console
-        puts "Hello #{user.name}, welcome back."
+        puts "Hello #{@logged_in_user.name}, welcome back."
         options = [
             'Create a recipe', 
             'View my saved recipes', 
@@ -94,7 +94,7 @@ class Interface
         when 1
             create_recipe            #DONE
         when 2
-            view_saved_recipes(user) #DONE
+            view_saved_recipes #DONE
         when 3
             find_a_recipe            #DONE
         when 4
@@ -104,6 +104,7 @@ class Interface
         when 6
             more_options             #DONE
         when 7
+            @logged_in_user = nil
             welcome_message          #DONE
         when 8
             clear_console
@@ -111,10 +112,9 @@ class Interface
         end
     end
 
-    def view_saved_recipes(user)
+    def view_saved_recipes
         clear_console
-        recipes = user.see_saved_recipes
-        recipes.each do |recipe|
+        @logged_in_user.see_saved_recipes.each do |recipe|
             puts "*************"
             puts "name: #{recipe.name}"
             puts "description: #{recipe.description}"
@@ -129,7 +129,7 @@ class Interface
         puts "Press Enter to go back"
         user_input = get_input
         if user_input.empty?
-            user_page(@logged_in_user)
+            user_page
         end
         user_input
     end
@@ -161,9 +161,8 @@ class Interface
         puts "DESCRIPTION:"
         puts "#{recipe.description}"
         puts "---------------------"
-        ingredients = recipe.ingredients
         recipe_ingredients = recipe.recipe_ingredients
-        ingredients.each_with_index do |ingredient, index|
+        recipe.ingredients.each_with_index do |ingredient, index|
             puts "#{ingredient.name}: #{recipe_ingredients[index].amount}"
         end
 
@@ -195,7 +194,7 @@ class Interface
                 press_enter_to_go_back
             end
         when 2
-            user_page(@logged_in_user)
+            user_page
         end
         
     end
@@ -260,7 +259,7 @@ class Interface
         when 1
             edit_a_recipe
         when 2
-            user_page(@logged_in_user)
+            user_page
         end
     end
 
@@ -300,7 +299,7 @@ class Interface
         when 4
             view_top_rated_recipe          #DONE
         when 5
-            user_page(@logged_in_user)
+            user_page
         end
     end
 
