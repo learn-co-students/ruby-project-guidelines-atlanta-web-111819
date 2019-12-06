@@ -80,12 +80,12 @@ class Interface
         options = [
             'Create a recipe', 
             'View my saved recipes', 
-            'find a recipe', 
-            'view my created recipes', 
+            'Find a recipe', 
+            'View my created recipes', 
             'Manage account', 
-            'more', 
-            'logout', 
-            'quit'
+            'More', 
+            'Logout', 
+            'Quit'
         ]
         print_page_options(options)
 
@@ -288,7 +288,12 @@ class Interface
 
     def more_options
         clear_console
-        options = ['View recipes in a category', "View recipes I've rated", 'View top category', 'View top rated recipe', 'Go back']
+        options = [
+            'View recipes in my favorite categories', 
+            "View recipes I've rated", 
+            'View top category', 
+            'View top rated recipe', 
+            'Go back']
         print_page_options(options)
         input = get_valid_input(options.length)
         case input
