@@ -8,7 +8,7 @@ class Interface
         # puts "Sign up, type: signup"
         options = ['Sign in', 'Sign up']
         print_page_options(options)
-        
+
         log_in_input = get_valid_input(options.length)
         if log_in_input == 1
             self.signin
@@ -106,7 +106,7 @@ class Interface
         when 4
             view_created_recipes     #DONE
         when 5
-            manage_account
+            manage_account           #DONE
         when 6
             more_options             #DONE
         when 7
@@ -341,7 +341,7 @@ class Interface
             # puts "RATING: #{recipe.view_recipe_rating}"
             # puts "DESCRIPTION:"
             # puts "#{recipe.description}"
-            puts "************"
+            puts "..................."
         end
         press_enter_to_go_back
     end
