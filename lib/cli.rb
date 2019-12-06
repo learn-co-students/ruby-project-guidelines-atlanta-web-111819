@@ -398,6 +398,7 @@ class Interface
 
     def view_favorite_categories
         clear_console
+        @logged_in_user.reload
         @logged_in_user.categories.each do |category|
             puts "#{category.title}"
         end
