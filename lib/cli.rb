@@ -166,10 +166,10 @@ class Interface
 
     def view_recipe(recipe)
         clear_console
-        puts "NAME: #{recipe.name}"
-        puts "RATING: #{recipe.view_recipe_rating}"
+        puts "NAME:" + " #{recipe.name}".colorize(:green)
+        puts "RATING:" + " #{recipe.view_recipe_rating}".colorize(:green)
         puts "DESCRIPTION:"
-        puts "#{recipe.description}"
+        puts "#{recipe.description}".colorize(:blue)
         puts "---------------------"
 
         recipe_ingredients = recipe.recipe_ingredients
@@ -225,10 +225,10 @@ class Interface
 
         clear_console
         puts "Please enter your Ingredients"
-        puts "Use the correct format for ingredients"
-        puts "<INGREDIENT NAME>: <AMOUNT>"
+        puts "Use the correct format for ingredients".colorize(:red)
+        puts "<INGREDIENT NAME>: <AMOUNT>".colorize(:green)
         puts ""
-        puts "When done inputing ingredients, press enter to stop."
+        puts "When done inputing ingredients, press enter to stop.".colorize(:red)
         ingredients = []
         # continue = true
         while true
@@ -260,15 +260,15 @@ class Interface
 
     def view_created_recipes
         clear_console
-        puts "Average rating: #{@logged_in_user.view_my_average_rating}"
+        puts "Average rating: " + "#{@logged_in_user.view_my_average_rating}".colorize(:green)
         puts "********************"
 
         @logged_in_user.created_recipes.each_with_index do |recipe, index|
             puts "#{index+1}."
-            puts "NAME: #{recipe.name}"
-            puts "RATING: #{recipe.view_recipe_rating}"
+            puts "NAME: " + "#{recipe.name}".colorize(:green)
+            puts "RATING: " + "#{recipe.view_recipe_rating}".colorize(:green)
             puts "DESCRIPTION:"
-            puts "#{recipe.description}"
+            puts "#{recipe.description}".colorize(:blue)
             puts "*********************"
         end
         options = ['Edit a recipe', 'Go back']
@@ -350,7 +350,7 @@ class Interface
         clear_console
         recipes = @logged_in_user.my_rated_recipes
         recipes.each do |recipe_array|
-            puts "NAME: #{recipe_array[0]}, MY RATING: #{recipe_array[1]}"
+            puts "NAME: #{recipe_array[0].colorize(:green)}, MY RATING: #{recipe_array[1].colorize(:green)}"
             puts "------------"
         end
         press_enter_to_go_back

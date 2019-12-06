@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
         # {name: "Water", amount: "1 gallon"},
         # {name: "FLour", amount: "6 pounds"}
         # ]
-        new_recipe = Recipe.create(name: name, description: description, creator_id: self.id)
+        new_recipe = Recipe.create(name: name, description: description, creator_id: self.id).reload
         create_recipe_ingredients(self.create_ingredients(ingredients), new_recipe)
         new_recipe
     end
