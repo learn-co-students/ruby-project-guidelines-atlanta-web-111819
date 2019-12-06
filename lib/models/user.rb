@@ -59,20 +59,24 @@ class User < ActiveRecord::Base
         end 
         meal1 = Meal.find_or_create_by(user_id: self.id, recipe_id: recipe.id)
         meal1.update(rating: rating)
+        meal1.reload
     end
 
     def edit_recipe(recipe, recipe_name, description)
         recipe.update(name: recipe_name, description: description)
+        recipe.reload
     end
 
     def remove_saved_recipe(recipe)
         meal1 = Meal.find_by(recipe_id: recipe.id)
         meal1.destroy
+        # meal1.reload
     end
 
     def delete_my_recipe(recipe)
         if recipe.creator_id == self.id 
             recipe.destroy
+            # recipe.reload
         else
             puts "This is not your recipe!" ##################### FIX LATER
         end

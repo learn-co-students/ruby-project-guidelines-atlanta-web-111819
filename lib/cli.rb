@@ -30,9 +30,10 @@ class Interface
         gets.strip
     end
 
-    def signin
+    def signin(new_user = false)
         clear_console
-        puts "Please enter your name"
+        puts "Please enter your name" if !new_user
+        puts "Please type your name again to login." if new_user
         puts "Press Enter to go back"
         user_name = get_input
         if user_name.empty?
@@ -63,7 +64,7 @@ class Interface
             signin
         else
             User.create(name: user_name)
-            signin
+            signin(new_user = true)
         end
     end
 
@@ -94,7 +95,7 @@ class Interface
         when 1
             create_recipe            #DONE
         when 2
-            view_saved_recipes #DONE
+            view_saved_recipes       #DONE
         when 3
             find_a_recipe            #DONE
         when 4
@@ -140,7 +141,8 @@ class Interface
         error = false
         puts "Please enter the name of a recipe"
         user_input = press_enter_to_go_back
-        recipe = Recipe.find_by(name: user_input.capitalize)
+        recipe = Recipe.find_by(name: user_input)
+        # binding.pry
         if recipe
             view_recipe(recipe)
         else
