@@ -356,6 +356,7 @@ class Interface
         options = [
             'Change User Name',
             'Add favorite category',
+            'View my favorite categories',
             'Go back'
         ]
         print_page_options(options)
@@ -366,8 +367,18 @@ class Interface
         when 2
             add_fav_category
         when 3
+            view_favorite_categories
+        when 4
             user_page
         end
+    end
+
+    def view_favorite_categories
+        clear_console
+        @logged_in_user.categories.each do |category|
+            puts "#{category.title}"
+        end
+        press_enter_to_go_back
     end
 
     def change_name
