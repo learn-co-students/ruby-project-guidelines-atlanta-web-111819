@@ -42,7 +42,7 @@ class Interface
         user = User.find_by(name: user_name)
         if user
             @logged_in_user = user
-            user_page(user)
+            user_page
             
         else
             signin
@@ -151,7 +151,7 @@ class Interface
     end
 
     def clear_console
-        50.times {puts ""}
+        75.times {puts ""}
     end
 
     def view_recipe(recipe)
@@ -359,7 +359,7 @@ class Interface
         when 2
             add_fav_category
         when 3
-            user_page(@logged_in_user)
+            user_page
         end
     end
 
