@@ -140,7 +140,7 @@ class Interface
         error = false
         puts "Please enter the name of a recipe"
         user_input = press_enter_to_go_back
-        recipe = Recipe.find_by(name: user_input)
+        recipe = Recipe.find_by(name: user_input.capitalize)
         if recipe
             view_recipe(recipe)
         else
