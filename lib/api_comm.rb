@@ -4,8 +4,8 @@ require 'pry'
 require 'digest'
 
 def fetch_marvel(entry, offset = 0)
-  public_key = "5e8946f12e3dfaf42d0e54483983358e"
-  private_key = "a449d1ddb8da13dfbd329ff8dc0d9747375a63e9"
+  public_key = ENV["PUBLIC_KEY"]
+  private_key = ENV["PRIVATE_KEY"]
   time = Time.now
   hash_soup = time.to_s + private_key + public_key
   hash = Digest::MD5.hexdigest hash_soup

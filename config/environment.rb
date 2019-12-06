@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'dotenv/load'
 Bundler.require
 
 ActiveRecord::Base.establish_connection(
@@ -7,5 +8,7 @@ ActiveRecord::Base.establish_connection(
     )
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
+
+
 
 require_all 'lib'

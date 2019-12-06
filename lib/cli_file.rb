@@ -18,8 +18,12 @@ def get_characters
             offset_num += 100
             print_character(fetch_marvel("characters", offset_num))
         when "last"
-            offset_num -= 100
-            print_character(fetch_marvel("characters", offset_num))
+            if offset_num == 0
+                puts "Already on first page!!!"
+            else
+                offset_num -= 100
+                print_character(fetch_marvel("characters", offset_num))
+            end
         when "add"
             add_to_db("characters", offset_num)
         when "jump"
@@ -58,8 +62,12 @@ def get_comics
             offset_num += 100
             print_comic(fetch_marvel("comics", offset_num))
         when "last"
-            offset_num -= 100
-            print_comic(fetch_marvel("comics", offset_num))
+            if offset_num == 0
+                puts "Already on first page!!!"
+            else
+                offset_num -= 100
+                print_comic(fetch_marvel("comics", offset_num))
+            end
         when "add"
             add_to_db("comics", offset_num)
         when "jump"
@@ -181,6 +189,7 @@ def char_database
         when "2"
             Character.delete_all
         when "3"
+            Screen.clear
             looper = "n"
         end
     end
@@ -221,7 +230,6 @@ def display_char
 
     when "exit"
         Screen.clear
-        display_char
     end
 
 end
@@ -243,6 +251,7 @@ def comic_database
         when "2"
             Comic.delete_all
         when "3"
+            Screen.clear
             looper = "n"
         end
     end
@@ -272,7 +281,7 @@ def display_comic
 
         case choice2
         when "characters"
-            related_characters(temp)
+            related_character(temp)
         when "del"
             "Are you sure you want to delete?"
             choice3 = get_entry
@@ -285,7 +294,6 @@ def display_comic
 
     when "exit"
         Screen.clear
-        display_comic
     end
 
 end
@@ -308,6 +316,7 @@ def relation_database
             Charactercomic.delete_all
         when "3"
             looper = "n"
+            Screen.clear
         end
     end
 end
@@ -315,7 +324,7 @@ end
 def display_relation
     Charactercomic.all.each do |char|
         # binding.pry
-        puts "#{char.character_id} | #{char.comic_id}"
+        puts "#{char.id} | #{char.character_id} | #{char.comic_id}"
     end
     puts "'select' Character or 'exit'"
     choice = get_entry
@@ -346,7 +355,6 @@ def display_relation
 
     when "exit"
         Screen.clear
-        display_comic
     end
 
 end
