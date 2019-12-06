@@ -18,7 +18,6 @@ GEM
     concurrent-ruby (1.0.5)
     faker (2.2.1)
       i18n (>= 0.8)
-    gem (0.0.1.alpha)
     i18n (0.8.1)
     method_source (0.8.2)
     minitest (5.10.1)
@@ -50,7 +49,6 @@ PLATFORMS
 DEPENDENCIES
   colorize (~> 0.8.1)
   faker (~> 2.2)
-  gem (~> 0.0.1.alpha)
   pry
   require_all
   sinatra-activerecord
