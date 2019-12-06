@@ -10,17 +10,22 @@ def get_characters
 
     while looper == "y"
         puts "\n\n"
+        puts "Page #{(offset_num/100) + 1}"
         puts "next, last, jump, add, back to menu?"
         choice = get_entry
 
         case choice
         when "next"
+            Screen.clear
+            puts "\n\n"
             offset_num += 100
             print_character(fetch_marvel("characters", offset_num))
         when "last"
             if offset_num == 0
                 puts "Already on first page!!!"
             else
+                Screen.clear
+                puts "\n\n"
                 offset_num -= 100
                 print_character(fetch_marvel("characters", offset_num))
             end
@@ -54,17 +59,22 @@ def get_comics
 
     while looper == "y"
         puts "\n\n"
+        puts "Page #{(offset_num/100) + 1}"
         puts "next, last, jump, add, back to menu?"
         choice = get_entry
 
         case choice
         when "next"
+            Screen.clear
+            puts "\n\n"
             offset_num += 100
             print_comic(fetch_marvel("comics", offset_num))
         when "last"
             if offset_num == 0
                 puts "Already on first page!!!"
             else
+                Screen.clear
+                puts "\n\n"
                 offset_num -= 100
                 print_comic(fetch_marvel("comics", offset_num))
             end
@@ -188,6 +198,7 @@ def char_database
             display_char
         when "2"
             Character.delete_all
+            puts "CLEARED"
         when "3"
             Screen.clear
             looper = "n"
@@ -250,6 +261,7 @@ def comic_database
             display_comic
         when "2"
             Comic.delete_all
+            puts "CLEARED"
         when "3"
             Screen.clear
             looper = "n"
@@ -314,6 +326,7 @@ def relation_database
             display_relation
         when "2"
             Charactercomic.delete_all
+            puts "CLEARED"
         when "3"
             looper = "n"
             Screen.clear
