@@ -350,7 +350,7 @@ class Interface
         clear_console
         recipes = @logged_in_user.my_rated_recipes
         recipes.each do |recipe_array|
-            puts "NAME: #{recipe_array[0].colorize(:green)}, MY RATING: #{recipe_array[1].colorize(:green)}"
+            puts "NAME: #{recipe_array[0].colorize(:green)}, MY RATING:" + "#{recipe_array[1]}".colorize(:green)
             puts "------------"
         end
         press_enter_to_go_back
