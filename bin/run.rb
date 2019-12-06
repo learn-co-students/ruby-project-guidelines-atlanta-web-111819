@@ -1,5 +1,5 @@
 require_relative '../config/environment'
 
+cli = Interface.new
 
-
-puts "HELLO WORLD"
+cli.welcome_message
